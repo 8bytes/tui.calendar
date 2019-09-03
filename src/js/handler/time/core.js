@@ -20,16 +20,28 @@ var timeCore = {
      * @param {number} baseMil - base milliseconds number for supplied height.
      * @param {number} height - container element height.
      * @param {number} y - Y coordinate to calculate hour ratio.
+     * @param {object} options - Options.
      * @returns {number} hour index ratio value.
      */
-    _calcGridYIndex: function(baseMil, height, y) {
+    _calcGridYIndex: function(baseMil, height, y, options) {
+        var gridMinutes = options.gridMinutes ? options.gridMinutes : 5;
+        var hourFraction = gridMinutes / 60;
+        var currentFraction = hourFraction;
+        var fractionsOfAnHour = [0];
         // get ratio from right expression > point.y : x = session.height : baseMil
         // and convert milliseconds value to hours.
         var result = datetime.millisecondsTo('hour', (y * baseMil) / height);
         var floored = result | 0;
-        // This is the fractions of an hour you want to be selectable on hover
-        var fractionsOfAHour = [0, 0.25, 0.5, 0.75, 1];
-        var nearest = common.nearest(result - floored, fractionsOfAHour);
+        var nearest = null;
+
+        while (currentFraction < 1) {
+            fractionsOfAnHour.push(currentFraction);
+            currentFraction += hourFraction;
+        }
+        fractionsOfAnHour.push(1);
+        console.log(fractionsOfAnHour)
+
+        nearest = common.nearest(result - floored, fractionsOfAnHour);
 
         return floored + nearest;
     },
@@ -57,7 +69,7 @@ var timeCore = {
             var mouseY = Point.n(domevent.getMousePosition(mouseEvent, container)).y,
                 gridY = common.ratio(viewHeight, hourLength, mouseY),
                 timeY = new TZDate(viewTime).addMinutes(datetime.minutesFromHours(gridY)),
-                nearestGridY = self._calcGridYIndex(baseMil, viewHeight, mouseY),
+                nearestGridY = self._calcGridYIndex(baseMil, viewHeight, mouseY, options),
                 nearestGridTimeY = new TZDate(viewTime).addMinutes(
                     datetime.minutesFromHours(nearestGridY + options.hourStart)
                 );

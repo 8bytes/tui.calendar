@@ -103,8 +103,8 @@ TimeCreationGuide.prototype.clearGuideElement = function() {
 TimeCreationGuide.prototype._refreshGuideElement = function(top, height, start, end, bottomLabel) {
     var guideElement = this.guideElement;
     var timeElement = this.guideTimeElement;
-    var startTimeMinutes = new Date(start).getMinutes() === 0 ? '00' : new Date(start).getMinutes().toString();
-    var endTimeMinutes = new Date(end).getMinutes() === 0 ? '00' : new Date(end).getMinutes().toString();
+    var startTimeMinutes = new Date(start).getMinutes() === 0 ? '00' : new Date(start).getMinutes().toString().padStart(2, '0');
+    var endTimeMinutes = new Date(end).getMinutes() === 0 ? '00' : new Date(end).getMinutes().toString().padStart(2, '0');
     var startTimeLabel = new Date(start).getHours().toString() + ':' + startTimeMinutes;
     var endTimeLabel = new Date(end).getHours().toString() + ':' + endTimeMinutes;
 
