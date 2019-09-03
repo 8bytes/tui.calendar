@@ -24,43 +24,43 @@ var CLICK_DELAY = 0;
  */
 function MouseMove(dragHandler, timeGridView, baseController) {
     /**
-	 * Drag handler instance.
-	 * @type {Drag}
-	 */
+     * Drag handler instance.
+     * @type {Drag}
+     */
     this.dragHandler = dragHandler;
 
     /**
-	 * TimeGrid view instance.
-	 * @type {TimeGrid}
-	 */
+     * TimeGrid view instance.
+     * @type {TimeGrid}
+     */
     this.timeGridView = timeGridView;
 
     /**
-	 * Base controller instance.
-	 * @type {Base}
-	 */
+     * Base controller instance.
+     * @type {Base}
+     */
     this.baseController = baseController;
 
     /**
-	 * @type {TimeCreationGuide}
-	 */
+     * @type {TimeCreationGuide}
+     */
     this.guide = new TimeCreationGuide(this);
 
     /**
-	 * Temporary function for single drag session's calc.
-	 * @type {function}
-	 */
+     * Temporary function for single drag session's calc.
+     * @type {function}
+     */
     this._getScheduleDataFunc = null;
 
     /**
-	 * Temporary function for drag start data cache.
-	 * @type {object}
-	 */
+     * Temporary function for drag start data cache.
+     * @type {object}
+     */
     this._dragStart = null;
 
     /**
-	 * @type {boolean}
-	 */
+     * @type {boolean}
+     */
     this._requestOnClick = false;
 
     dragHandler.on('mousemove', this._onMouseMove, this);
@@ -81,7 +81,8 @@ MouseMove.prototype.destroy = function() {
         domevent.off(timeGridView.container, 'dblclick', this._onDblClick, this);
     }
 
-    this.dragHandler = this.timeGridView = this.baseController = this._getScheduleDataFunc = this._dragStart = this.guide = null;
+    this.dragHandler = this.timeGridView = this.baseController =
+    this._getScheduleDataFunc = this._dragStart = this.guide = null;
 };
 
 /**
@@ -147,7 +148,7 @@ MouseMove.prototype._onMouseMove = function(mouseMoveEventData) {
  * @emits TimeCreation#timeCreationClick
  * @param {object} clickEventData - event data from MouseMove#click.
  */
-MouseMove.prototype._onClick = function(clickEventData) {
+MouseMove.prototype._onClick = function() {
     this.guide.clearGuideElement();
 };
 
