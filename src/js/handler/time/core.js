@@ -66,12 +66,13 @@ var timeCore = {
          * @returns {object} - common event data for time.*
          */
         return util.bind(function(mouseEvent, extend) {
+            var minMinutes = options.minGuideMins ? options.minGuideMins : 5;
             var mouseY = Point.n(domevent.getMousePosition(mouseEvent, container)).y,
                 gridY = common.ratio(viewHeight, hourLength, mouseY),
                 timeY = new TZDate(viewTime).addMinutes(datetime.minutesFromHours(gridY)),
                 nearestGridY = self._calcGridYIndex(baseMil, viewHeight, mouseY, options),
                 nearestGridTimeY = new TZDate(viewTime).addMinutes(
-                    Math.round(datetime.minutesFromHours(nearestGridY + options.hourStart) / 5) * 5
+                    Math.round(datetime.minutesFromHours(nearestGridY + options.hourStart) / minMinutes) * minMinutes
                 );
 
             return util.extend({
