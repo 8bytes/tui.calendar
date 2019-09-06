@@ -39,7 +39,7 @@ var timeCore = {
             currentFraction += hourFraction;
         }
         fractionsOfAnHour.push(1);
-        console.log(fractionsOfAnHour)
+        // console.log(fractionsOfAnHour)
 
         nearest = common.nearest(result - floored, fractionsOfAnHour);
 
@@ -71,7 +71,7 @@ var timeCore = {
                 timeY = new TZDate(viewTime).addMinutes(datetime.minutesFromHours(gridY)),
                 nearestGridY = self._calcGridYIndex(baseMil, viewHeight, mouseY, options),
                 nearestGridTimeY = new TZDate(viewTime).addMinutes(
-                    datetime.minutesFromHours(nearestGridY + options.hourStart)
+                    Math.round(datetime.minutesFromHours(nearestGridY + options.hourStart) / 5) * 5
                 );
 
             return util.extend({
