@@ -211,11 +211,10 @@ TimeCreationGuide.prototype._createGuideElement = function(dragStartEventData) {
         hourStart = datetime.millisecondsFrom('hour', dragStartEventData.hourStart) || 0,
         unitData, styleFunc, styleData, result, top, height, start, end;
 
-        
     unitData = this._styleUnit = this._getUnitData(relatedView);
     styleFunc = this._styleFunc = this._getStyleDataFunc.apply(this, unitData);
     styleData = this._styleStart = styleFunc(dragStartEventData);
-        
+
     start = new TZDate(styleData[1]).addMinutes(datetime.minutesFromHours(hourStart));
     end = new TZDate(styleData[2]).addMinutes(datetime.minutesFromHours(hourStart));
     top = styleData[0];

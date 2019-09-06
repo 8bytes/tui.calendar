@@ -1,6 +1,6 @@
 /*!
  * TOAST UI Calendar
- * @version 1.12.5 | Tue Sep 03 2019
+ * @version 1.12.5 | Fri Sep 06 2019
  * @author NHN FE Development Lab <dl_javascript@nhn.com>
  * @license MIT
  */
@@ -15156,16 +15156,28 @@ var timeCore = {
      * @param {number} baseMil - base milliseconds number for supplied height.
      * @param {number} height - container element height.
      * @param {number} y - Y coordinate to calculate hour ratio.
+     * @param {object} options - Options.
      * @returns {number} hour index ratio value.
      */
-    _calcGridYIndex: function(baseMil, height, y) {
+    _calcGridYIndex: function(baseMil, height, y, options) {
+        var gridMinutes = options.gridMinutes ? options.gridMinutes : 5;
+        var hourFraction = gridMinutes / 60;
+        var currentFraction = hourFraction;
+        var fractionsOfAnHour = [0];
         // get ratio from right expression > point.y : x = session.height : baseMil
         // and convert milliseconds value to hours.
         var result = datetime.millisecondsTo('hour', (y * baseMil) / height);
         var floored = result | 0;
-        // This is the fractions of an hour you want to be selectable on hover
-        var fractionsOfAHour = [0, 0.25, 0.5, 0.75, 1];
-        var nearest = common.nearest(result - floored, fractionsOfAHour);
+        var nearest = null;
+
+        while (currentFraction < 1) {
+            fractionsOfAnHour.push(currentFraction);
+            currentFraction += hourFraction;
+        }
+        fractionsOfAnHour.push(1);
+        // console.log(fractionsOfAnHour)
+
+        nearest = common.nearest(result - floored, fractionsOfAnHour);
 
         return floored + nearest;
     },
@@ -15193,11 +15205,11 @@ var timeCore = {
             var mouseY = Point.n(domevent.getMousePosition(mouseEvent, container)).y,
                 gridY = common.ratio(viewHeight, hourLength, mouseY),
                 timeY = new TZDate(viewTime).addMinutes(datetime.minutesFromHours(gridY)),
-                nearestGridY = self._calcGridYIndex(baseMil, viewHeight, mouseY),
+                nearestGridY = self._calcGridYIndex(baseMil, viewHeight, mouseY, options),
                 nearestGridTimeY = new TZDate(viewTime).addMinutes(
-                    datetime.minutesFromHours(nearestGridY + options.hourStart)
+                    Math.round(datetime.minutesFromHours(nearestGridY + options.hourStart) / 5) * 5
                 );
-
+                    
             return util.extend({
                 target: mouseEvent.target || mouseEvent.srcElement,
                 relatedView: timeView,
@@ -15812,8 +15824,8 @@ TimeCreationGuide.prototype.clearGuideElement = function() {
 TimeCreationGuide.prototype._refreshGuideElement = function(top, height, start, end, bottomLabel) {
     var guideElement = this.guideElement;
     var timeElement = this.guideTimeElement;
-    var startTimeMinutes = new Date(start).getMinutes() === 0 ? '00' : new Date(start).getMinutes().toString();
-    var endTimeMinutes = new Date(end).getMinutes() === 0 ? '00' : new Date(end).getMinutes().toString();
+    var startTimeMinutes = new Date(start).getMinutes() === 0 ? '00' : new Date(start).getMinutes().toString().padStart(2, '0');
+    var endTimeMinutes = new Date(end).getMinutes() === 0 ? '00' : new Date(end).getMinutes().toString().padStart(2, '0');
     var startTimeLabel = new Date(start).getHours().toString() + ':' + startTimeMinutes;
     var endTimeLabel = new Date(end).getHours().toString() + ':' + endTimeMinutes;
 
@@ -15895,7 +15907,7 @@ TimeCreationGuide.prototype._getStyleDataFunc = function(viewHeight, hourLength,
      * @returns {number[]} top, time
      */
     function getStyleData(scheduleData) {
-        var minMinutes = 30;
+        var minMinutes = 5;
         var gridY = scheduleData.nearestGridY,
             gridTimeY = scheduleData.nearestGridTimeY,
             gridEndTimeY = scheduleData.nearestGridEndTimeY || new TZDate(gridTimeY).addMinutes(minMinutes),
@@ -15920,10 +15932,11 @@ TimeCreationGuide.prototype._createGuideElement = function(dragStartEventData) {
         hourStart = datetime.millisecondsFrom('hour', dragStartEventData.hourStart) || 0,
         unitData, styleFunc, styleData, result, top, height, start, end;
 
+        
     unitData = this._styleUnit = this._getUnitData(relatedView);
     styleFunc = this._styleFunc = this._getStyleDataFunc.apply(this, unitData);
     styleData = this._styleStart = styleFunc(dragStartEventData);
-
+        
     start = new TZDate(styleData[1]).addMinutes(datetime.minutesFromHours(hourStart));
     end = new TZDate(styleData[2]).addMinutes(datetime.minutesFromHours(hourStart));
     top = styleData[0];

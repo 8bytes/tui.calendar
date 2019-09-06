@@ -73,7 +73,7 @@ var timeCore = {
                 nearestGridTimeY = new TZDate(viewTime).addMinutes(
                     Math.round(datetime.minutesFromHours(nearestGridY + options.hourStart) / 5) * 5
                 );
-                    
+
             return util.extend({
                 target: mouseEvent.target || mouseEvent.srcElement,
                 relatedView: timeView,
