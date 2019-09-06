@@ -15202,12 +15202,13 @@ var timeCore = {
          * @returns {object} - common event data for time.*
          */
         return util.bind(function(mouseEvent, extend) {
+            var minMinutes = options.minGuideMins ? options.minGuideMins : 5;
             var mouseY = Point.n(domevent.getMousePosition(mouseEvent, container)).y,
                 gridY = common.ratio(viewHeight, hourLength, mouseY),
                 timeY = new TZDate(viewTime).addMinutes(datetime.minutesFromHours(gridY)),
                 nearestGridY = self._calcGridYIndex(baseMil, viewHeight, mouseY, options),
                 nearestGridTimeY = new TZDate(viewTime).addMinutes(
-                    Math.round(datetime.minutesFromHours(nearestGridY + options.hourStart) / 5) * 5
+                    Math.round(datetime.minutesFromHours(nearestGridY + options.hourStart) / minMinutes) * minMinutes
                 );
 
             return util.extend({
@@ -15830,7 +15831,7 @@ TimeCreationGuide.prototype._refreshGuideElement = function(top, height, start, 
     var endTimeLabel = new Date(end).getHours().toString() + ':' + endTimeMinutes;
 
     guideElement.style.top = top + 'px';
-    guideElement.style.height = height + 'px';
+    guideElement.style.height = Math.round(height) + 'px';
     guideElement.style.display = 'block';
 
     timeElement.innerHTML = startTimeLabel + ' - ' + endTimeLabel;
@@ -15907,7 +15908,12 @@ TimeCreationGuide.prototype._getStyleDataFunc = function(viewHeight, hourLength,
      * @returns {number[]} top, time
      */
     function getStyleData(scheduleData) {
-        var minMinutes = 5;
+        var minMinutes =
+            scheduleData.relatedView &&
+            scheduleData.relatedView.options &&
+            scheduleData.relatedView.options.minGuideMins
+                ? scheduleData.relatedView.options.minGuideMins : 5;
+
         var gridY = scheduleData.nearestGridY,
             gridTimeY = scheduleData.nearestGridTimeY,
             gridEndTimeY = scheduleData.nearestGridEndTimeY || new TZDate(gridTimeY).addMinutes(minMinutes),
@@ -15958,12 +15964,17 @@ TimeCreationGuide.prototype._createGuideElement = function(dragStartEventData) {
  * @param {object} dragEventData - drag schedule data.
  */
 TimeCreationGuide.prototype._onDrag = function(dragEventData) {
-    var minutes30 = 30;
+    var minMinutes =
+        dragEventData.relatedView &&
+        dragEventData.relatedView.options &&
+        dragEventData.relatedView.options.minGuideMins
+            ? dragEventData.relatedView.options.minGuideMins : 5;
+
     var styleFunc = this._styleFunc,
         unitData = this._styleUnit,
         startStyle = this._styleStart,
         refreshGuideElement = this._refreshGuideElement.bind(this),
-        heightOfHalfHour,
+        heightOfMinSelection,
         endStyle,
         result;
 
@@ -15971,22 +15982,22 @@ TimeCreationGuide.prototype._onDrag = function(dragEventData) {
         return;
     }
 
-    heightOfHalfHour = (unitData[4] / 2);
+    heightOfMinSelection = (unitData[4] / (60 / minMinutes));
     endStyle = styleFunc(dragEventData);
 
     if (endStyle[0] > startStyle[0]) {
         result = this._limitStyleData(
             startStyle[0],
-            (endStyle[0] - startStyle[0]) + heightOfHalfHour,
+            (endStyle[0] - startStyle[0]) + heightOfMinSelection,
             startStyle[1],
-            new TZDate(endStyle[1]).addMinutes(minutes30)
+            new TZDate(endStyle[1]).addMinutes(minMinutes)
         );
     } else {
         result = this._limitStyleData(
             endStyle[0],
-            (startStyle[0] - endStyle[0]) + heightOfHalfHour,
+            (startStyle[0] - endStyle[0]) + heightOfMinSelection,
             endStyle[1],
-            new TZDate(startStyle[1]).addMinutes(minutes30)
+            new TZDate(startStyle[1]).addMinutes(minMinutes)
         );
         result.push(true);
     }
