@@ -134,12 +134,12 @@ MouseMove.prototype._onMouseMove = function(mouseMoveEventData) {
     eventData = getScheduleDataFunc(mouseMoveEventData.originEvent);
 
     this._requestOnClick = true;
-    setTimeout(function() {
-        if (self._requestOnClick) {
-            self.fire('timeCreationClick', eventData);
-        }
-        self._requestOnClick = false;
-    }, CLICK_DELAY);
+    // setTimeout(function() {
+    //     if (self._requestOnClick) {
+    //         self.fire('timeCreationClick', eventData);
+    //     }
+    //     self._requestOnClick = false;
+    // }, CLICK_DELAY);
     this._dragStart = this._getScheduleDataFunc = null;
 };
 
