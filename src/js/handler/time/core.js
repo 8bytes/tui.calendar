@@ -60,6 +60,8 @@ var timeCore = {
             hourLength = options.hourEnd - options.hourStart,
             baseMil = datetime.millisecondsFrom('hour', hourLength);
 
+            // console.log(timeView)
+
         /**
          * @param {MouseEvent} mouseEvent - mouse event object to get common event data.
          * @param {object} [extend] - object to extend event data before return.
@@ -105,6 +107,8 @@ var timeCore = {
          * @returns {object} - common event data for time.*
          */
         return util.bind(function(startDate, endDate, hourStart) {
+
+          console.log('herreee')
             var gridY, timeY, nearestGridY, nearestGridTimeY, nearestGridEndY, nearestGridEndTimeY;
 
             gridY = startDate.getHours() - hourStart + getNearestHour(startDate.getMinutes());

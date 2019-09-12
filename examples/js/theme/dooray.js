@@ -78,8 +78,8 @@ var THEME_DOORAY = {
     'week.timegridLeftTimezoneLabel.height': '51px',
     'week.timegridLeftAdditionalTimezone.backgroundColor': '#fdfdfd',
 
-    'week.timegridOneHour.height': '48px',
-    'week.timegridHalfHour.height': '24px',
+    'week.timegridOneHour.height': '200px',
+    'week.timegridHalfHour.height': '100px',
     'week.timegridHalfHour.borderBottom': '1px dotted #f9f9f9',
     'week.timegridHorizontalLine.borderBottom': '1px solid #eee',
 

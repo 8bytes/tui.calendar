@@ -297,7 +297,7 @@ Schedule.prototype.setTimePeriod = function(start, end) {
     this.end = new TZDate(end || this.start);
 
     if (!end) {
-        this.end.setMinutes(this.end.getMinutes() + 30);
+        this.end.setMinutes(this.end.getMinutes() + 5);
     }
 };
 

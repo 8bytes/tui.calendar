@@ -196,12 +196,14 @@ TimeResize.prototype._updateSchedule = function(scheduleData) {
         dateEnd,
         newEnds,
         baseDate;
+    var options = scheduleData.relatedView.options;
+    var minGuideMins = options.minGuideMins;
 
     if (!schedule) {
         return;
     }
 
-    timeDiff -= datetime.millisecondsFrom('minutes', 30);
+    timeDiff -= datetime.millisecondsFrom('minutes', minGuideMins);
 
     baseDate = new TZDate(relatedView.getDate());
     dateEnd = datetime.end(baseDate);
@@ -211,9 +213,11 @@ TimeResize.prototype._updateSchedule = function(scheduleData) {
         newEnds = new TZDate(dateEnd);
     }
 
-    if (newEnds.getTime() - schedule.getStarts().getTime() < datetime.millisecondsFrom('minutes', 30)) {
-        newEnds = new TZDate(schedule.getStarts()).addMinutes(30);
+    if (newEnds.getTime() - schedule.getStarts().getTime() < datetime.millisecondsFrom('minutes', minGuideMins)) {
+        newEnds = new TZDate(schedule.getStarts()).addMinutes(minGuideMins);
     }
+
+    console.log('woogoo')
 
     /**
      * @event TimeResize#beforeUpdateSchedule
@@ -253,14 +257,17 @@ TimeResize.prototype._onDragEnd = function(dragEndEventData) {
         targetModelID: dragStart.targetModelID
     });
 
+    console.log(dragStart)
+    console.log(scheduleData)
+
     scheduleData.range = [
         dragStart.timeY,
-        new TZDate(scheduleData.timeY).addMinutes(30)
+        new TZDate(scheduleData.timeY).addMinutes(5)
     ];
 
     scheduleData.nearestRange = [
         dragStart.nearestGridTimeY,
-        scheduleData.nearestGridTimeY.addMinutes(30)
+        scheduleData.nearestGridTimeY.addMinutes(5)
     ];
 
     this._updateSchedule(scheduleData);

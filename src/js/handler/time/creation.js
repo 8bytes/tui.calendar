@@ -212,12 +212,14 @@ TimeCreation.prototype._onDrag = function(dragEventData, overrideEventName, revi
  * or TimeCreation#timeCreationClick
  */
 TimeCreation.prototype._createSchedule = function(eventData) {
+    var options = eventData.relatedView.options;
+    var minGuideMins = options.minGuideMins;
     var relatedView = eventData.relatedView,
         createRange = eventData.createRange,
         nearestGridTimeY = eventData.nearestGridTimeY,
         nearestGridEndTimeY = eventData.nearestGridEndTimeY
             ? eventData.nearestGridEndTimeY
-            : new TZDate(nearestGridTimeY).addMinutes(30),
+            : new TZDate(nearestGridTimeY).addMinutes(minGuideMins),
         baseDate,
         dateStart,
         dateEnd,

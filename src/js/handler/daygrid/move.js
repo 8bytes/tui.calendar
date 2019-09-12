@@ -151,7 +151,7 @@ DayGridMove.prototype._onDragStart = function(dragStartEventData) {
      * @property {number} datesInRange - date count of this view.
      * @property {number} dragStartXIndex - index number of dragstart grid index.
      * @property {number} xIndex - index number of mouse positions.
-     * @property {Schedule} model - data object of model isntance.
+     * @property {Schedule} model - data object of model instance.
      * @property {HTMLDivElement} scheduleBlockElement - target schedule block element.
      */
     this.fire('dragstart', scheduleData);
@@ -168,6 +168,8 @@ DayGridMove.prototype._onDrag = function(dragEventData) {
     if (!getScheduleDataFunc) {
         return;
     }
+
+    console.log('dragg');
 
     /**
      * @schedule DayGridMove#drag
