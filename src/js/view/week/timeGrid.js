@@ -140,6 +140,7 @@ function TimeGrid(name, options, panelElement) {
         renderEndDate: '',
         hourStart: 0,
         hourEnd: 24,
+        minGuideMins: 5,
         timezones: options.timezones,
         isReadOnly: options.isReadOnly,
         showTimezoneCollapseButton: false
