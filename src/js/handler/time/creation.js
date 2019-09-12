@@ -282,10 +282,6 @@ TimeCreation.prototype._onDragEnd = function(dragEndEventData) {
         ].sort(array.compare.num.asc);
         range[1].addMinutes(minGuideMins);
 
-        console.log(dragStart)
-        console.log(eventData)
-        console.log(range)
-
         eventData.createRange = range;
 
         self._createSchedule(eventData);

@@ -186,7 +186,8 @@ TimeCreationGuide.prototype._getStyleDataFunc = function(viewHeight, hourLength,
      * @returns {number[]} top, time
      */
     function getStyleData(scheduleData) {
-        var options = scheduleData.relatedView && scheduleData.relatedView.options ? scheduleData.relatedView.options : null;
+        var options = scheduleData.relatedView && scheduleData.relatedView.options
+            ? scheduleData.relatedView.options : null;
         var minMinutes = options && options.minGuideMins ? options.minGuideMins : 5;
 
         var gridY = scheduleData.nearestGridY,
@@ -238,8 +239,10 @@ TimeCreationGuide.prototype._createGuideElement = function(dragStartEventData) {
  * Drag event handler
  * @param {object} dragEventData - drag schedule data.
  */
+// eslint-disable-next-line complexity
 TimeCreationGuide.prototype._onDrag = function(dragEventData) {
-    var options = dragEventData.relatedView && dragEventData.relatedView.options ? dragEventData.relatedView.options : null;
+    var options = dragEventData.relatedView && dragEventData.relatedView.options
+        ? dragEventData.relatedView.options : null;
     var minMinutes = options && options.minGuideMins ? options.minGuideMins : 5;
 
     var styleFunc = this._styleFunc,

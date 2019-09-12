@@ -52,7 +52,7 @@ function Week(controller, options, container, panels, viewName) {
         timezonesCollapsed: false,
         hourStart: 0,
         hourEnd: 24,
-        minGuideMins: 5,
+        minGuideMins: 5
     }, options);
 
     /**

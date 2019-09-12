@@ -41,7 +41,7 @@ function Time(options, container, theme) {
         defaultMarginBottom: 2,
         minHeight: 18.5,
         isReadOnly: false,
-        minGuideMins: 5,
+        minGuideMins: 5
     }, options);
 
     this.timeTmpl = timeTmpl;
