@@ -64,6 +64,7 @@ function Month(options, container, controller) {
         visibleWeeksCount: null,
         isAlways6Week: true,
         isReadOnly: options.isReadOnly,
+        minGuideMins: 5,
         grid: {
             header: {
                 height: 34

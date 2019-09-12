@@ -142,6 +142,7 @@ export interface IWeekOptions {
     timezonesCollapsed?: boolean;
     hourStart?: number;
     hourEnd?: number;
+    minGuideMins?: number;
 }
 
 export interface IMonthOptions {
@@ -152,6 +153,7 @@ export interface IMonthOptions {
     isAlways6Week?: boolean;
     workweek?: boolean;
     visibleScheduleCount?: number;
+    minGuideMins?: number;
     moreLayerSize?: {
         width?: string | null;
         height?: string | null;

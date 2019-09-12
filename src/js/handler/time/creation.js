@@ -274,11 +274,13 @@ TimeCreation.prototype._onDragEnd = function(dragEndEventData) {
      * @param {object} eventData - event data
      */
     function reviseFunc(eventData) {
+        var options = eventData.relatedView && eventData.relatedView.options ? eventData.relatedView.options : null;
+        var minGuideMins = options.minGuideMins ? options.minGuideMins : 5;
         var range = [
             dragStart.nearestGridTimeY,
             eventData.nearestGridTimeY
         ].sort(array.compare.num.asc);
-        range[1].addMinutes(30);
+        range[1].addMinutes(minGuideMins);
 
         eventData.createRange = range;
 
