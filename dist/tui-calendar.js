@@ -1,6 +1,6 @@
 /*!
  * TOAST UI Calendar
- * @version 1.12.5 | Fri Sep 06 2019
+ * @version 1.12.5 | Thu Sep 12 2019
  * @author NHN FE Development Lab <dl_javascript@nhn.com>
  * @license MIT
  */
@@ -15588,11 +15588,13 @@ TimeCreation.prototype._onDragEnd = function(dragEndEventData) {
      * @param {object} eventData - event data
      */
     function reviseFunc(eventData) {
+        var options = eventData.relatedView && eventData.relatedView.options ? eventData.relatedView.options : null;
+        var minGuideMins = options.minGuideMins ? options.minGuideMins : 5;
         var range = [
             dragStart.nearestGridTimeY,
             eventData.nearestGridTimeY
         ].sort(array.compare.num.asc);
-        range[1].addMinutes(30);
+        range[1].addMinutes(minGuideMins);
 
         eventData.createRange = range;
 
@@ -15908,11 +15910,9 @@ TimeCreationGuide.prototype._getStyleDataFunc = function(viewHeight, hourLength,
      * @returns {number[]} top, time
      */
     function getStyleData(scheduleData) {
-        var minMinutes =
-            scheduleData.relatedView &&
-            scheduleData.relatedView.options &&
-            scheduleData.relatedView.options.minGuideMins
-                ? scheduleData.relatedView.options.minGuideMins : 5;
+        var options = scheduleData.relatedView && scheduleData.relatedView.options
+            ? scheduleData.relatedView.options : null;
+        var minMinutes = options && options.minGuideMins ? options.minGuideMins : 5;
 
         var gridY = scheduleData.nearestGridY,
             gridTimeY = scheduleData.nearestGridTimeY,
@@ -15963,12 +15963,11 @@ TimeCreationGuide.prototype._createGuideElement = function(dragStartEventData) {
  * Drag event handler
  * @param {object} dragEventData - drag schedule data.
  */
+// eslint-disable-next-line complexity
 TimeCreationGuide.prototype._onDrag = function(dragEventData) {
-    var minMinutes =
-        dragEventData.relatedView &&
-        dragEventData.relatedView.options &&
-        dragEventData.relatedView.options.minGuideMins
-            ? dragEventData.relatedView.options.minGuideMins : 5;
+    var options = dragEventData.relatedView && dragEventData.relatedView.options
+        ? dragEventData.relatedView.options : null;
+    var minMinutes = options && options.minGuideMins ? options.minGuideMins : 5;
 
     var styleFunc = this._styleFunc,
         unitData = this._styleUnit,
@@ -18724,6 +18723,7 @@ function Month(options, container, controller) {
         visibleWeeksCount: null,
         isAlways6Week: true,
         isReadOnly: options.isReadOnly,
+        minGuideMins: 5,
         grid: {
             header: {
                 height: 34
@@ -23825,7 +23825,8 @@ function Time(options, container, theme) {
         hourEnd: 24,
         defaultMarginBottom: 2,
         minHeight: 18.5,
-        isReadOnly: false
+        isReadOnly: false,
+        minGuideMins: 5
     }, options);
 
     this.timeTmpl = timeTmpl;
@@ -24235,6 +24236,7 @@ function TimeGrid(name, options, panelElement) {
         renderEndDate: '',
         hourStart: 0,
         hourEnd: 24,
+        minGuideMins: 5,
         timezones: options.timezones,
         isReadOnly: options.isReadOnly,
         showTimezoneCollapseButton: false
@@ -24827,7 +24829,8 @@ function Week(controller, options, container, panels, viewName) {
         showTimezoneCollapseButton: false,
         timezonesCollapsed: false,
         hourStart: 0,
-        hourEnd: 24
+        hourEnd: 24,
+        minGuideMins: 5
     }, options);
 
     /**
