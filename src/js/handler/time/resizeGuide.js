@@ -113,6 +113,8 @@ TimeResizeGuide.prototype._refreshGuideElement = function(guideHeight, minTimeHe
 
     timeElement = domutil.find(config.classname('.time-schedule-content-time'), guideElement);
 
+    console.log(guideHeight)
+
     reqAnimFrame.requestAnimFrame(function() {
         guideElement.style.height = guideHeight + 'px';
         guideElement.style.display = 'block';
@@ -182,8 +184,8 @@ TimeResizeGuide.prototype._onDrag = function(dragEventData) {
         height;
 
     height = (this._startHeightPixel + gridYOffsetPixel);
-    // at least large than 30min from schedule start time.
-    minHeight = guideTop + ratio(hourLength, viewHeight, 0.5);
+    // at least large than 30min from schedule start time. // 5 mins 0.83333
+    minHeight = guideTop + ratio(hourLength, viewHeight, 0.083333333);
     minHeight -= this._startTopPixel;
     timeMinHeight = minHeight;
     minHeight += ratio(minutesLength, viewHeight, goingDuration) + ratio(minutesLength, viewHeight, comingDuration);

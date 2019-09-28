@@ -211,6 +211,8 @@ TimeMoveGuide.prototype._onDrag = function(dragEventData) {
         bottomLimit,
         top;
 
+    console.log('time guide on drag')
+
     if (!util.browser.msie) {
         domutil.addClass(global.document.body, config.classname('dragging'));
     }

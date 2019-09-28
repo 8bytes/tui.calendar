@@ -105,6 +105,8 @@ TimeResize.prototype._onDragStart = function(dragStartEventData) {
         getScheduleDataFunc,
         scheduleData;
 
+    console.log('Drag start', dragStartEventData);
+
     if (!timeView || !blockElement) {
         return;
     }
@@ -153,6 +155,7 @@ TimeResize.prototype._onDrag = function(dragEventData, overrideEventName, revise
         startScheduleData = this._dragStart,
         scheduleData;
 
+
     if (!getScheduleDataFunc || !startScheduleData) {
         return;
     }
@@ -160,6 +163,8 @@ TimeResize.prototype._onDrag = function(dragEventData, overrideEventName, revise
     scheduleData = getScheduleDataFunc(dragEventData.originEvent, {
         targetModelID: startScheduleData.targetModelID
     });
+
+    console.log('On Drag', dragEventData, startScheduleData, scheduleData);
 
     if (revise) {
         revise(scheduleData);
@@ -201,7 +206,9 @@ TimeResize.prototype._updateSchedule = function(scheduleData) {
         return;
     }
 
-    timeDiff -= datetime.millisecondsFrom('minutes', 30);
+    console.log('schedule update')
+
+    timeDiff -= datetime.millisecondsFrom('minutes', 5);
 
     baseDate = new TZDate(relatedView.getDate());
     dateEnd = datetime.end(baseDate);
@@ -211,8 +218,8 @@ TimeResize.prototype._updateSchedule = function(scheduleData) {
         newEnds = new TZDate(dateEnd);
     }
 
-    if (newEnds.getTime() - schedule.getStarts().getTime() < datetime.millisecondsFrom('minutes', 30)) {
-        newEnds = new TZDate(schedule.getStarts()).addMinutes(30);
+    if (newEnds.getTime() - schedule.getStarts().getTime() < datetime.millisecondsFrom('minutes', 5)) {
+        newEnds = new TZDate(schedule.getStarts()).addMinutes(5);
     }
 
     /**
@@ -253,14 +260,16 @@ TimeResize.prototype._onDragEnd = function(dragEndEventData) {
         targetModelID: dragStart.targetModelID
     });
 
+    console.log('drag ebnd:', scheduleData)
+
     scheduleData.range = [
         dragStart.timeY,
-        new TZDate(scheduleData.timeY).addMinutes(30)
+        new TZDate(scheduleData.timeY).addMinutes(5)
     ];
 
     scheduleData.nearestRange = [
         dragStart.nearestGridTimeY,
-        scheduleData.nearestGridTimeY.addMinutes(30)
+        scheduleData.nearestGridTimeY.addMinutes(5)
     ];
 
     this._updateSchedule(scheduleData);
