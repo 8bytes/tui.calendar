@@ -113,8 +113,6 @@ TimeResizeGuide.prototype._refreshGuideElement = function(guideHeight, minTimeHe
 
     timeElement = domutil.find(config.classname('.time-schedule-content-time'), guideElement);
 
-    console.log(guideHeight)
-
     reqAnimFrame.requestAnimFrame(function() {
         guideElement.style.height = guideHeight + 'px';
         guideElement.style.display = 'block';

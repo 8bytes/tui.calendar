@@ -105,8 +105,6 @@ TimeResize.prototype._onDragStart = function(dragStartEventData) {
         getScheduleDataFunc,
         scheduleData;
 
-    console.log('Drag start', dragStartEventData);
-
     if (!timeView || !blockElement) {
         return;
     }
@@ -164,8 +162,6 @@ TimeResize.prototype._onDrag = function(dragEventData, overrideEventName, revise
         targetModelID: startScheduleData.targetModelID
     });
 
-    console.log('On Drag', dragEventData, startScheduleData, scheduleData);
-
     if (revise) {
         revise(scheduleData);
     }
@@ -205,8 +201,6 @@ TimeResize.prototype._updateSchedule = function(scheduleData) {
     if (!schedule) {
         return;
     }
-
-    console.log('schedule update')
 
     timeDiff -= datetime.millisecondsFrom('minutes', 5);
 
@@ -259,8 +253,6 @@ TimeResize.prototype._onDragEnd = function(dragEndEventData) {
     scheduleData = getScheduleDataFunc(dragEndEventData.originEvent, {
         targetModelID: dragStart.targetModelID
     });
-
-    console.log('drag ebnd:', scheduleData)
 
     scheduleData.range = [
         dragStart.timeY,

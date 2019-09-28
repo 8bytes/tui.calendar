@@ -39,7 +39,6 @@ var timeCore = {
             currentFraction += hourFraction;
         }
         fractionsOfAnHour.push(1);
-        // console.log(fractionsOfAnHour)
 
         nearest = common.nearest(result - floored, fractionsOfAnHour);
 
