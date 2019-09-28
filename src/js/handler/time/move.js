@@ -241,7 +241,7 @@ TimeMove.prototype._updateSchedule = function(scheduleData) {
         return;
     }
 
-    timeDiff -= datetime.millisecondsFrom('minutes', 30);
+    timeDiff -= datetime.millisecondsFrom('minutes', 5);
     newStarts = new TZDate(schedule.getStarts()).addMilliseconds(timeDiff);
     newEnds = new TZDate(schedule.getEnds()).addMilliseconds(timeDiff);
 
@@ -293,12 +293,12 @@ TimeMove.prototype._onDragEnd = function(dragEndEventData) {
 
     scheduleData.range = [
         dragStart.timeY,
-        new TZDate(scheduleData.timeY).addMinutes(30)
+        new TZDate(scheduleData.timeY).addMinutes(5)
     ];
 
     scheduleData.nearestRange = [
         dragStart.nearestGridTimeY,
-        new TZDate(scheduleData.nearestGridTimeY).addMinutes(30)
+        new TZDate(scheduleData.nearestGridTimeY).addMinutes(5)
     ];
 
     this._updateSchedule(scheduleData);

@@ -1,6 +1,6 @@
 /*!
  * TOAST UI Calendar
- * @version 1.12.5 | Thu Sep 12 2019
+ * @version 1.12.5 | Sat Sep 28 2019
  * @author NHN FE Development Lab <dl_javascript@nhn.com>
  * @license MIT
  */
@@ -3002,7 +3002,7 @@ datetime = {
      * The number of milliseconds 20 minutes for schedule min duration
      * @type {number}
      */
-    MILLISECONDS_SCHEDULE_MIN_DURATION: 20 * 60000,
+    MILLISECONDS_SCHEDULE_MIN_DURATION: 5 * 60000,
 
     /**
      * convert milliseconds
@@ -15175,7 +15175,6 @@ var timeCore = {
             currentFraction += hourFraction;
         }
         fractionsOfAnHour.push(1);
-        // console.log(fractionsOfAnHour)
 
         nearest = common.nearest(result - floored, fractionsOfAnHour);
 
@@ -16170,12 +16169,12 @@ MouseMove.prototype._onMouseMove = function(mouseMoveEventData) {
     eventData = getScheduleDataFunc(mouseMoveEventData.originEvent);
 
     this._requestOnClick = true;
-    setTimeout(function() {
-        if (self._requestOnClick) {
-            self.fire('timeCreationClick', eventData);
-        }
-        self._requestOnClick = false;
-    }, CLICK_DELAY);
+    // setTimeout(function() {
+    //     if (self._requestOnClick) {
+    //         self.fire('timeCreationClick', eventData);
+    //     }
+    //     self._requestOnClick = false;
+    // }, CLICK_DELAY);
     this._dragStart = this._getScheduleDataFunc = null;
 };
 
@@ -16447,7 +16446,7 @@ TimeMove.prototype._updateSchedule = function(scheduleData) {
         return;
     }
 
-    timeDiff -= datetime.millisecondsFrom('minutes', 30);
+    timeDiff -= datetime.millisecondsFrom('minutes', 5);
     newStarts = new TZDate(schedule.getStarts()).addMilliseconds(timeDiff);
     newEnds = new TZDate(schedule.getEnds()).addMilliseconds(timeDiff);
 
@@ -16499,12 +16498,12 @@ TimeMove.prototype._onDragEnd = function(dragEndEventData) {
 
     scheduleData.range = [
         dragStart.timeY,
-        new TZDate(scheduleData.timeY).addMinutes(30)
+        new TZDate(scheduleData.timeY).addMinutes(5)
     ];
 
     scheduleData.nearestRange = [
         dragStart.nearestGridTimeY,
-        new TZDate(scheduleData.nearestGridTimeY).addMinutes(30)
+        new TZDate(scheduleData.nearestGridTimeY).addMinutes(5)
     ];
 
     this._updateSchedule(scheduleData);
@@ -17000,6 +16999,7 @@ TimeResize.prototype._onDrag = function(dragEventData, overrideEventName, revise
         startScheduleData = this._dragStart,
         scheduleData;
 
+
     if (!getScheduleDataFunc || !startScheduleData) {
         return;
     }
@@ -17048,7 +17048,7 @@ TimeResize.prototype._updateSchedule = function(scheduleData) {
         return;
     }
 
-    timeDiff -= datetime.millisecondsFrom('minutes', 30);
+    timeDiff -= datetime.millisecondsFrom('minutes', 5);
 
     baseDate = new TZDate(relatedView.getDate());
     dateEnd = datetime.end(baseDate);
@@ -17058,8 +17058,8 @@ TimeResize.prototype._updateSchedule = function(scheduleData) {
         newEnds = new TZDate(dateEnd);
     }
 
-    if (newEnds.getTime() - schedule.getStarts().getTime() < datetime.millisecondsFrom('minutes', 30)) {
-        newEnds = new TZDate(schedule.getStarts()).addMinutes(30);
+    if (newEnds.getTime() - schedule.getStarts().getTime() < datetime.millisecondsFrom('minutes', 5)) {
+        newEnds = new TZDate(schedule.getStarts()).addMinutes(5);
     }
 
     /**
@@ -17102,12 +17102,12 @@ TimeResize.prototype._onDragEnd = function(dragEndEventData) {
 
     scheduleData.range = [
         dragStart.timeY,
-        new TZDate(scheduleData.timeY).addMinutes(30)
+        new TZDate(scheduleData.timeY).addMinutes(5)
     ];
 
     scheduleData.nearestRange = [
         dragStart.nearestGridTimeY,
-        scheduleData.nearestGridTimeY.addMinutes(30)
+        scheduleData.nearestGridTimeY.addMinutes(5)
     ];
 
     this._updateSchedule(scheduleData);
@@ -17346,10 +17346,11 @@ TimeResizeGuide.prototype._onDrag = function(dragEventData) {
         minHeight,
         maxHeight,
         height;
+    var gridMinutes = viewOptions.gridMinutes ? viewOptions.gridMinutes : 5;
 
     height = (this._startHeightPixel + gridYOffsetPixel);
-    // at least large than 30min from schedule start time.
-    minHeight = guideTop + ratio(hourLength, viewHeight, 0.5);
+    // Min height is a ratio of the min grid height to an hour 
+    minHeight = guideTop + ratio(hourLength, viewHeight, gridMinutes / 60);
     minHeight -= this._startTopPixel;
     timeMinHeight = minHeight;
     minHeight += ratio(minutesLength, viewHeight, goingDuration) + ratio(minutesLength, viewHeight, comingDuration);

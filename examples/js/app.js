@@ -29,6 +29,11 @@
         }
     });
 
+    cal.setTheme({
+        'week.timegridOneHour.height': '400px',
+        'week.timegridHalfHour.height': '200px',
+    });
+
     // event handlers
     cal.on({
         'clickMore': function(e) {
