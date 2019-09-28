@@ -180,10 +180,11 @@ TimeResizeGuide.prototype._onDrag = function(dragEventData) {
         minHeight,
         maxHeight,
         height;
+    var gridMinutes = viewOptions.gridMinutes ? viewOptions.gridMinutes : 5;
 
     height = (this._startHeightPixel + gridYOffsetPixel);
-    // at least large than 30min from schedule start time. // 5 mins 0.83333
-    minHeight = guideTop + ratio(hourLength, viewHeight, 0.083333333);
+    // Min height is a ratio of the min grid height to an hour 
+    minHeight = guideTop + ratio(hourLength, viewHeight, gridMinutes / 60);
     minHeight -= this._startTopPixel;
     timeMinHeight = minHeight;
     minHeight += ratio(minutesLength, viewHeight, goingDuration) + ratio(minutesLength, viewHeight, comingDuration);
