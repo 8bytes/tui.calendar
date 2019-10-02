@@ -105,15 +105,17 @@ TimeResizeGuide.prototype._clearGuideElement = function() {
  * @param {number} schedule - the schedule.
  * @param {number} endTime - the nearst end time.
  */
-TimeResizeGuide.prototype._refreshGuideElement = function(guideHeight, minTimeHeight, timeHeight) {
+TimeResizeGuide.prototype._refreshGuideElement = function(guideHeight, minTimeHeight, timeHeight, updatingTime) {
     var guideElement = this.guideElement;
     var timeElement;
+    var dragTimeElement;
 
     if (!guideElement) {
         return;
     }
 
     timeElement = domutil.find(config.classname('.time-schedule-content-time'), guideElement);
+    dragTimeElement = domutil.find('.calendar-dragging-time', timeElement);
 
     reqAnimFrame.requestAnimFrame(function() {
         guideElement.style.height = guideHeight + 'px';
@@ -122,6 +124,9 @@ TimeResizeGuide.prototype._refreshGuideElement = function(guideHeight, minTimeHe
         if (timeElement) {
             timeElement.style.height = timeHeight + 'px';
             timeElement.style.minHeight = minTimeHeight + 'px';
+            if (dragTimeElement) {
+                dragTimeElement.innerHTML = updatingTime;
+            }
         }
     });
 };
@@ -203,9 +208,8 @@ TimeResizeGuide.prototype._onDrag = function(dragEventData) {
 
     startTimeString = datetime.format(this._schedule.start._date, 'HH:mm');
     endTimeString = datetime.format(nearestGridTimeY, 'HH:mm');
-    this._schedule.updatingTime = startTimeString + '-' + endTimeString;
 
-    this._refreshGuideElement(height, timeMinHeight, timeHeight);
+    this._refreshGuideElement(height, timeMinHeight, timeHeight, startTimeString + '-' + endTimeString);
 };
 
 module.exports = TimeResizeGuide;
