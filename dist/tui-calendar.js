@@ -1,6 +1,6 @@
 /*!
  * TOAST UI Calendar
- * @version 1.12.5 | Sat Sep 28 2019
+ * @version 1.12.5 | Wed Oct 02 2019
  * @author NHN FE Development Lab <dl_javascript@nhn.com>
  * @license MIT
  */
@@ -15171,7 +15171,7 @@ var timeCore = {
         var nearest = null;
 
         while (currentFraction < 1) {
-            fractionsOfAnHour.push(currentFraction);
+            fractionsOfAnHour.push(Math.round(currentFraction * 100) / 100);
             currentFraction += hourFraction;
         }
         fractionsOfAnHour.push(1);
@@ -16790,10 +16790,14 @@ TimeMoveGuide.prototype._onDrag = function(dragEventData) {
         guideHeight = parseFloat(this.guideElement.style.height),
         hourLength = viewOptions.hourEnd - viewOptions.hourStart,
         gridYOffset = dragEventData.nearestGridY - this._startGridY,
+        gridMinutes = viewOptions.gridMinutes ? viewOptions.gridMinutes : 5,
         gridYOffsetPixel = ratio(hourLength, viewHeight, gridYOffset),
         gridDiff = dragEventData.nearestGridY - this._lastDrag.nearestGridY,
         bottomLimit,
-        top;
+        top,
+        startTimeString,
+        endTimeString,
+        minuteDiff;
 
     if (!util.browser.msie) {
         domutil.addClass(global.document.body, config.classname('dragging'));
@@ -16810,9 +16814,15 @@ TimeMoveGuide.prototype._onDrag = function(dragEventData) {
     top = Math.max(top, 0);
     top = Math.min(top, bottomLimit);
 
-    // update time
-    this._model.start = new TZDate(this._model.getStarts()).addMinutes(datetime.minutesFromHours(gridDiff));
-    this._model.end = new TZDate(this._model.getEnds()).addMinutes(datetime.minutesFromHours(gridDiff));
+    minuteDiff = gridMinutes * Math.round(datetime.minutesFromHours(gridDiff) / gridMinutes);
+    this._model.start = new TZDate(this._model.getStarts()).addMinutes(minuteDiff);
+    this._model.end = new TZDate(this._model.getEnds()).addMinutes(minuteDiff);
+    // console.log(this._model.getStarts())
+
+    startTimeString = datetime.format(this._model.start._date, 'HH:mm');
+    endTimeString = datetime.format(this._model.end._date, 'HH:mm');
+    this._model.updatingTime = startTimeString + '-' + endTimeString;
+
     this._lastDrag = dragEventData;
 
     this._refreshGuideElement(top, this._model, this._viewModel);
@@ -16998,7 +17008,6 @@ TimeResize.prototype._onDrag = function(dragEventData, overrideEventName, revise
     var getScheduleDataFunc = this._getScheduleDataFunc,
         startScheduleData = this._dragStart,
         scheduleData;
-
 
     if (!getScheduleDataFunc || !startScheduleData) {
         return;
@@ -17268,16 +17277,24 @@ TimeResizeGuide.prototype._clearGuideElement = function() {
  * @param {number} guideHeight - guide element's style height.
  * @param {number} minTimeHeight - time element's min height
  * @param {number} timeHeight - time element's height.
+ * @param {number} schedule - the schedule.
+ * @param {number} endTime - the nearst end time.
  */
-TimeResizeGuide.prototype._refreshGuideElement = function(guideHeight, minTimeHeight, timeHeight) {
+TimeResizeGuide.prototype._refreshGuideElement = function(guideHeight, minTimeHeight, timeHeight, schedule, endTime) {
     var guideElement = this.guideElement;
     var timeElement;
+    var startTimeString;
+    var endTimeString;
 
     if (!guideElement) {
         return;
     }
 
     timeElement = domutil.find(config.classname('.time-schedule-content-time'), guideElement);
+
+    startTimeString = datetime.format(schedule.start._date, 'HH:mm');
+    endTimeString = datetime.format(endTime, 'HH:mm');
+    schedule.updatingTime = startTimeString + '-' + endTimeString;
 
     reqAnimFrame.requestAnimFrame(function() {
         guideElement.style.height = guideHeight + 'px';
@@ -17345,8 +17362,9 @@ TimeResizeGuide.prototype._onDrag = function(dragEventData) {
         timeMinHeight,
         minHeight,
         maxHeight,
-        height;
-    var gridMinutes = viewOptions.gridMinutes ? viewOptions.gridMinutes : 5;
+        height,
+        gridMinutes = viewOptions.gridMinutes ? viewOptions.gridMinutes : 5,
+        nearestGridTimeY = dragEventData.nearestGridTimeY;
 
     height = (this._startHeightPixel + gridYOffsetPixel);
     // Min height is a ratio of the min grid height to an hour 
@@ -17362,7 +17380,7 @@ TimeResizeGuide.prototype._onDrag = function(dragEventData) {
 
     timeHeight = ratio(minutesLength, viewHeight, modelDuration) + gridYOffsetPixel;
 
-    this._refreshGuideElement(height, timeMinHeight, timeHeight);
+    this._refreshGuideElement(height, timeMinHeight, timeHeight, this._schedule, nearestGridTimeY);
 };
 
 module.exports = TimeResizeGuide;
