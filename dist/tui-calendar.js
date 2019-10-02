@@ -17280,21 +17280,15 @@ TimeResizeGuide.prototype._clearGuideElement = function() {
  * @param {number} schedule - the schedule.
  * @param {number} endTime - the nearst end time.
  */
-TimeResizeGuide.prototype._refreshGuideElement = function(guideHeight, minTimeHeight, timeHeight, schedule, endTime) {
+TimeResizeGuide.prototype._refreshGuideElement = function(guideHeight, minTimeHeight, timeHeight) {
     var guideElement = this.guideElement;
     var timeElement;
-    var startTimeString;
-    var endTimeString;
 
     if (!guideElement) {
         return;
     }
 
     timeElement = domutil.find(config.classname('.time-schedule-content-time'), guideElement);
-
-    startTimeString = datetime.format(schedule.start._date, 'HH:mm');
-    endTimeString = datetime.format(endTime, 'HH:mm');
-    schedule.updatingTime = startTimeString + '-' + endTimeString;
 
     reqAnimFrame.requestAnimFrame(function() {
         guideElement.style.height = guideHeight + 'px';
@@ -17364,7 +17358,9 @@ TimeResizeGuide.prototype._onDrag = function(dragEventData) {
         maxHeight,
         height,
         gridMinutes = viewOptions.gridMinutes ? viewOptions.gridMinutes : 5,
-        nearestGridTimeY = dragEventData.nearestGridTimeY;
+        nearestGridTimeY = dragEventData.nearestGridTimeY,
+        startTimeString,
+        endTimeString;
 
     height = (this._startHeightPixel + gridYOffsetPixel);
     // Min height is a ratio of the min grid height to an hour 
@@ -17380,7 +17376,11 @@ TimeResizeGuide.prototype._onDrag = function(dragEventData) {
 
     timeHeight = ratio(minutesLength, viewHeight, modelDuration) + gridYOffsetPixel;
 
-    this._refreshGuideElement(height, timeMinHeight, timeHeight, this._schedule, nearestGridTimeY);
+    startTimeString = datetime.format(this._schedule.start._date, 'HH:mm');
+    endTimeString = datetime.format(nearestGridTimeY, 'HH:mm');
+    this._schedule.updatingTime = startTimeString + '-' + endTimeString;
+
+    this._refreshGuideElement(height, timeMinHeight, timeHeight);
 };
 
 module.exports = TimeResizeGuide;
