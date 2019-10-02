@@ -102,16 +102,24 @@ TimeResizeGuide.prototype._clearGuideElement = function() {
  * @param {number} guideHeight - guide element's style height.
  * @param {number} minTimeHeight - time element's min height
  * @param {number} timeHeight - time element's height.
+ * @param {number} schedule - the schedule.
+ * @param {number} endTime - the nearst end time.
  */
-TimeResizeGuide.prototype._refreshGuideElement = function(guideHeight, minTimeHeight, timeHeight) {
+TimeResizeGuide.prototype._refreshGuideElement = function(guideHeight, minTimeHeight, timeHeight, schedule, endTime) {
     var guideElement = this.guideElement;
     var timeElement;
+    var startTimeString;
+    var endTimeString;
 
     if (!guideElement) {
         return;
     }
 
     timeElement = domutil.find(config.classname('.time-schedule-content-time'), guideElement);
+
+    startTimeString = datetime.format(schedule.start._date, 'HH:mm');
+    endTimeString = datetime.format(endTime, 'HH:mm');
+    schedule.resizeTime = startTimeString + '-' + endTimeString;
 
     reqAnimFrame.requestAnimFrame(function() {
         guideElement.style.height = guideHeight + 'px';
@@ -179,8 +187,9 @@ TimeResizeGuide.prototype._onDrag = function(dragEventData) {
         timeMinHeight,
         minHeight,
         maxHeight,
-        height;
-    var gridMinutes = viewOptions.gridMinutes ? viewOptions.gridMinutes : 5;
+        height,
+        gridMinutes = viewOptions.gridMinutes ? viewOptions.gridMinutes : 5,
+        nearestGridTimeY = dragEventData.nearestGridTimeY;
 
     height = (this._startHeightPixel + gridYOffsetPixel);
     // Min height is a ratio of the min grid height to an hour 
@@ -196,7 +205,7 @@ TimeResizeGuide.prototype._onDrag = function(dragEventData) {
 
     timeHeight = ratio(minutesLength, viewHeight, modelDuration) + gridYOffsetPixel;
 
-    this._refreshGuideElement(height, timeMinHeight, timeHeight);
+    this._refreshGuideElement(height, timeMinHeight, timeHeight, this._schedule, nearestGridTimeY);
 };
 
 module.exports = TimeResizeGuide;
