@@ -153,7 +153,6 @@ TimeResize.prototype._onDrag = function(dragEventData, overrideEventName, revise
         startScheduleData = this._dragStart,
         scheduleData;
 
-
     if (!getScheduleDataFunc || !startScheduleData) {
         return;
     }

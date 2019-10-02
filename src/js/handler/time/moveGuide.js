@@ -238,7 +238,7 @@ TimeMoveGuide.prototype._onDrag = function(dragEventData) {
     startTimeString = datetime.format(this._model.start._date, 'HH:mm');
     endTimeString = datetime.format(this._model.end._date, 'HH:mm');
     this._model.updatingTime = startTimeString + '-' + endTimeString;
-    
+
     this._lastDrag = dragEventData;
 
     this._refreshGuideElement(top, this._model, this._viewModel);
