@@ -119,7 +119,7 @@ TimeResizeGuide.prototype._refreshGuideElement = function(guideHeight, minTimeHe
 
     startTimeString = datetime.format(schedule.start._date, 'HH:mm');
     endTimeString = datetime.format(endTime, 'HH:mm');
-    schedule.resizeTime = startTimeString + '-' + endTimeString;
+    schedule.updatingTime = startTimeString + '-' + endTimeString;
 
     reqAnimFrame.requestAnimFrame(function() {
         guideElement.style.height = guideHeight + 'px';

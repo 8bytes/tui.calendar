@@ -35,7 +35,7 @@ var timeCore = {
         var nearest = null;
 
         while (currentFraction < 1) {
-            fractionsOfAnHour.push(currentFraction);
+            fractionsOfAnHour.push(Math.round(currentFraction * 100) / 100);
             currentFraction += hourFraction;
         }
         fractionsOfAnHour.push(1);

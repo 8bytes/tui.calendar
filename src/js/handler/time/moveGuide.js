@@ -206,10 +206,14 @@ TimeMoveGuide.prototype._onDrag = function(dragEventData) {
         guideHeight = parseFloat(this.guideElement.style.height),
         hourLength = viewOptions.hourEnd - viewOptions.hourStart,
         gridYOffset = dragEventData.nearestGridY - this._startGridY,
+        gridMinutes = viewOptions.gridMinutes ? viewOptions.gridMinutes : 5,
         gridYOffsetPixel = ratio(hourLength, viewHeight, gridYOffset),
         gridDiff = dragEventData.nearestGridY - this._lastDrag.nearestGridY,
         bottomLimit,
-        top;
+        top,
+        startTimeString,
+        endTimeString,
+        minuteDiff;
 
     if (!util.browser.msie) {
         domutil.addClass(global.document.body, config.classname('dragging'));
@@ -226,9 +230,15 @@ TimeMoveGuide.prototype._onDrag = function(dragEventData) {
     top = Math.max(top, 0);
     top = Math.min(top, bottomLimit);
 
-    // update time
-    this._model.start = new TZDate(this._model.getStarts()).addMinutes(datetime.minutesFromHours(gridDiff));
-    this._model.end = new TZDate(this._model.getEnds()).addMinutes(datetime.minutesFromHours(gridDiff));
+    minuteDiff = gridMinutes * Math.round(datetime.minutesFromHours(gridDiff) / gridMinutes);
+    this._model.start = new TZDate(this._model.getStarts()).addMinutes(minuteDiff);
+    this._model.end = new TZDate(this._model.getEnds()).addMinutes(minuteDiff);
+    // console.log(this._model.getStarts())
+
+    startTimeString = datetime.format(this._model.start._date, 'HH:mm');
+    endTimeString = datetime.format(this._model.end._date, 'HH:mm');
+    this._model.updatingTime = startTimeString + '-' + endTimeString;
+    
     this._lastDrag = dragEventData;
 
     this._refreshGuideElement(top, this._model, this._viewModel);
