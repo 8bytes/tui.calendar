@@ -12640,9 +12640,7 @@ Drag.prototype._onMouseDown = function(mouseDownEvent) {
     if (target && target.nodeName && target.nodeName !== 'INPUT' && target.nodeName !== 'TEXTAREA') {
       this._toggleDragEvent(true);
     }
-
-    this._toggleDragEvent(true);
-
+    
     /**
    * mousedown event for firefox bug. cancelable.
    * @event Drag#mouseDown
