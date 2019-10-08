@@ -1,6 +1,6 @@
 /*!
  * TOAST UI Calendar
- * @version 1.12.5 | Wed Oct 02 2019
+ * @version 1.12.5 | Tue Oct 08 2019
  * @author NHN FE Development Lab <dl_javascript@nhn.com>
  * @license MIT
  */
@@ -12636,6 +12636,10 @@ Drag.prototype._onMouseDown = function(mouseDownEvent) {
 
     this._clearData();
     this._dragStartEventData = this._getEventData(mouseDownEvent);
+
+    if (target && target.nodeName && target.nodeName !== 'INPUT' && target.nodeName !== 'TEXTAREA') {
+      this._toggleDragEvent(true);
+    }
 
     this._toggleDragEvent(true);
 
