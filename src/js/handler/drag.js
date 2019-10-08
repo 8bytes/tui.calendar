@@ -150,6 +150,10 @@ Drag.prototype._onMouseDown = function(mouseDownEvent) {
     this._clearData();
     this._dragStartEventData = this._getEventData(mouseDownEvent);
 
+    if (target && target.nodeName && target.nodeName !== 'INPUT' && target.nodeName !== 'TEXTAREA') {
+      this._toggleDragEvent(true);
+    }
+
     this._toggleDragEvent(true);
 
     /**
